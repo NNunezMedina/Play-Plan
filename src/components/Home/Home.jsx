@@ -1,6 +1,7 @@
 import s from "./Home.module.css";
 import reactIconUrl from "../../assets/react-icon-lg.svg";
 import PropTypes from "prop-types";
+import Button from "../Button/Button";
 
 function Home({setPage}) {
 
@@ -9,21 +10,23 @@ function Home({setPage}) {
       <img src={reactIconUrl} />
       <h1 className={s.title}>React Evaluation</h1>
       <p className={s.name}>Nathaly Nunez</p>
-      <div className={s.buttons}>
-        <button
+      <div className={s.buttons} >
+        <Button
+        variant="secondary"
           onClick={() => {
             setPage("/color-game")
           }}
         >
           Color Game
-        </button>
-        <button
+        </Button>
+        <Button
+        variant="secondary"
           onClick={() => {
             setPage("/doable")
           }}
         >
           Doable
-        </button>
+        </Button>
       </div>
     </div>
   );
