@@ -1,7 +1,9 @@
 import s from "./Home.module.css";
 import reactIconUrl from "../../assets/react-icon-lg.svg";
+import PropTypes from "prop-types";
 
 function Home({setPage}) {
+
   return (
     <div className={s.wrapper}>
       <img src={reactIconUrl} />
@@ -25,6 +27,10 @@ function Home({setPage}) {
       </div>
     </div>
   );
+}
+
+Home.propTypes = {
+  setPage: PropTypes.func.isRequired,
 }
 
 export default Home;
