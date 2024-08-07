@@ -30,5 +30,26 @@
 }
 
 .buttons > button {
+  justify-content: center;
+  align-items: center;
   width: 120px;
+  background-color: #FFFFFF;
+  border-radius: var(--rounded-md, 6px);
+  border: 1px solid #D4D4D4;
+  padding: var(--spacing-2) var(--spacing-4);
+  gap: var(--spacing-2);
+  font-size: var(--font-sm);
+  line-height: var(--leading-5);
+  font-weight: 500;
 }
+
+.buttons > button:hover {
+  background: var(--background-active, #f5f5f5);
+}
+
+.current {
+  background: var(--background-hover,black);
+}
+
+
+
