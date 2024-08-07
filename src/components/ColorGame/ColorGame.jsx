@@ -1,23 +1,26 @@
-import * as React from "react";
+
+import { useState } from "react";
 import s from "./ColorGame.module.css";
 import { getRandomColors, getStatus, rgbString, statusMessage } from "./utils";
 
 function ColorGame() {
-  let numOfColors = 6;
-  let colors = getRandomColors(numOfColors);
-  let attempts = [];
+  const [numOfColors, setNumOfColors] = useState(6) ;
+  const [colors, setColors] = useState(getRandomColors(numOfColors));
+  const [attempts, setAttempts] = useState([]);
 
   const target = Math.floor(Math.random() * colors.length);
 
   function handleReset() {
-    attempts = [];
-    colors = getRandomColors(numOfColors);
+    setAttempts([]);
+    setColors(getRandomColors(numOfColors));
   }
 
   function handleChangeNumber(event) {
-    numOfColors = event.target.value;
-    attempts = [];
-    colors = getRandomColors(numOfColors);
+    const value = Number(event.target.value);
+
+    setNumOfColors(value);
+    setAttempts([]);
+    setColors(getRandomColors(value));
   }
 
   const status = getStatus(attempts, target, numOfColors);
@@ -46,6 +49,7 @@ function ColorGame() {
         <p className={s["game-status"]}>{statusMessage[status]}</p>
         <button onClick={handleReset}>Reset</button>
       </div>
+
       <div className={s.squares}>
         {colors.map((color, index) => {
           const backgroundColor = rgbString(color);
