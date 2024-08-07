@@ -1,14 +1,20 @@
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import s from "./ColorGame.module.css";
 import { getRandomColors, getStatus, rgbString, statusMessage } from "./utils";
+import Button from "../Button/Button";
 
 function ColorGame() {
-  const [numOfColors, setNumOfColors] = useState(6) ;
+  const [numOfColors, setNumOfColors] = useState(6);
   const [colors, setColors] = useState(getRandomColors(numOfColors));
   const [attempts, setAttempts] = useState([]);
+  const [target, setTarget] = useState(Math.floor(Math.random() * colors.length));
 
-  const target = Math.floor(Math.random() * colors.length);
+  useEffect(() => {
+    const newColors = getRandomColors(numOfColors);
+    setColors(newColors);
+    setTarget(Math.floor(Math.random() * newColors.length));
+    setAttempts([]);
+  }, [numOfColors]);
 
   function handleReset() {
     setAttempts([]);
@@ -19,8 +25,6 @@ function ColorGame() {
     const value = Number(event.target.value);
 
     setNumOfColors(value);
-    setAttempts([]);
-    setColors(getRandomColors(value));
   }
 
   const status = getStatus(attempts, target, numOfColors);
@@ -32,7 +36,19 @@ function ColorGame() {
         Guess which color correspond to the following RGB code
       </p>
 
-      <div className={s["rgb-wrapper"]}>{rgbString(colors[target])}</div>
+      <div className={s["rgb-wrapper"]}>
+      {rgbString(colors[target])
+      .slice(4, -1)
+      .split(', ')
+      .map((value, index) => (
+    <div key={index} className={s.rgb}  style={{
+      borderColor: index === 0 ? 'red' : index === 1 ? 'green' : 'blue',
+    }}>
+      <p className={s.colorNumber}>{value}</p>
+      <p>{index === 0 ? 'red' : index === 1 ? 'green' : 'blue'}</p>
+    </div>
+  ))}
+      </div>
       <div className={s.dashboard}>
         <div className={s["number-input"]}>
           <label htmlFor="colors"># Colors</label>
@@ -47,20 +63,25 @@ function ColorGame() {
           />
         </div>
         <p className={s["game-status"]}>{statusMessage[status]}</p>
-        <button onClick={handleReset}>Reset</button>
+        <Button onClick={handleReset}>Reset</Button>
       </div>
 
       <div className={s.squares}>
         {colors.map((color, index) => {
-          const backgroundColor = rgbString(color);
-          const opacity = attempts.includes(index) ? "0" : "100";
+          const backgroundColor =
+            status === "win" || status === "lose"
+              ? rgbString(colors[target])
+              : rgbString(color);
+              const opacity = (status === "playing" && attempts.includes(index)) ? "0" : "100";
 
           return (
             <button
               key={index}
               style={{ backgroundColor, opacity }}
               onClick={() => {
-                /* completar */
+                if(status === "playing") {
+                  setAttempts((prevAttempts) => [...prevAttempts, index]);
+                }
               }}
               className={s.square}
             ></button>
