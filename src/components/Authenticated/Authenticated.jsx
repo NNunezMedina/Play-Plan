@@ -38,6 +38,8 @@ function Authenticated() {
   const [status, setStatus] = React.useState("idle");
   const [formStatus, setFormStatus] = React.useState("idle");
   const [tasks, setTasks] = React.useState([]);
+  const [sortBy, setSortBy] = React.useState("due_date-asc");
+  const [filters, setFilters] = React.useState({ onlyPending: false, onlyImportant: false})
 
   React.useEffect(() => {
     setStatus("loading");
@@ -77,7 +79,6 @@ function Authenticated() {
   }
 
   async function handleEdit(id, updates) {
-    // editar task
     editTask(id, updates)
     .then((updatedTask) => {
       setTasks((prevTasks) => 
@@ -102,8 +103,10 @@ function Authenticated() {
   const isLoading = status === "loading";
   const isCreating = formStatus === "loading";
 
-  const filteredTasks = filterTasks(tasks, {});
-  const sortedTasks = sortTasks(filteredTasks, "");
+
+  const filteredTasks = filterTasks(tasks, filters);
+  const sortedTasks = sortTasks(filteredTasks, sortBy);
+
 
   return (
     <>
@@ -133,7 +136,7 @@ function Authenticated() {
         <aside className={s.aside}>
           <div className={s["input-group"]}>
             <label htmlFor="sort_by">Sort by</label>
-            <select id="sort_by">
+            <select id="sort_by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
               <option value="due_date-asc">Due Date (old first)</option>
               <option value="due_date-desc">Due Date (new first)</option>
               <option value="alphabetical-asc">Alphabetical (a-z)</option>
@@ -143,11 +146,21 @@ function Authenticated() {
           <div className={s["input-group"]}>
             <label>Filter</label>
             <div className={s.checkbox}>
-              <input type="checkbox" id="pending" />
+              <input 
+              type="checkbox" 
+              id="pending" 
+              checked = {filters.onlyPending}
+              onChange={(e) => setFilters({ ...filters, onlyPending: e.target.checked })}
+              />
               <label htmlFor="pending">Only pending</label>
             </div>
             <div className={s.checkbox}>
-              <input type="checkbox" id="important" />
+              <input 
+              type="checkbox" 
+              id="important" 
+              checked={filters.onlyImportant}
+              onChange={(e) => setFilters({ ...filters, onlyImportant: e.target.checked })}
+              />
               <label htmlFor="important">Only important</label>
             </div>
           </div>
