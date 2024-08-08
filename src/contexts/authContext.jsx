@@ -1,5 +1,6 @@
 import * as React from "react";
 import { baseUrl, tokenKey } from "../constants";
+import PropTypes from "prop-types";  
 
 const authContext = React.createContext({
   isAuthenticated: false,
@@ -70,9 +71,19 @@ export function AuthProvider({ children }) {
     setIsAuthenticated(false);
   }
 
-  return <authContext.Provider>{children}</authContext.Provider>;
+  return (
+    <authContext.Provider value={{ isAuthenticated, login, logout, signup }}>
+      {children}
+    </authContext.Provider>
+  );
+}
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
 }
 
 export function useAuth() {
   return React.useContext(authContext);
 }
+
+
