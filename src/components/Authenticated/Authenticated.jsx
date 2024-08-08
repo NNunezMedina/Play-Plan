@@ -3,39 +3,59 @@ import s from "./Authenticated.module.css";
 import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
+import { getTasks } from "../../services/tasks";
 
-const exampleTasks = [
-  {
-    id: 1234567,
-    title: "Tarea de ejemplo 1",
-    due_date: null,
-    important: false,
-    completed: true,
-    user_id: 1111,
-  },
-  {
-    id: 1234568,
-    title: "Tarea de ejemplo 2",
-    due_date: "2023-12-01",
-    important: true,
-    completed: true,
-    user_id: 1111,
-  },
-  {
-    id: 1234569,
-    title: "Tarea de ejemplo 3",
-    due_date: "2023-12-02",
-    important: false,
-    completed: false,
-    user_id: 1111,
-  },
-];
+// const exampleTasks = [
+//   {
+//     id: 1234567,
+//     title: "Tarea de ejemplo 1",
+//     due_date: null,
+//     important: false,
+//     completed: true,
+//     user_id: 1111,
+//   },
+//   {
+//     id: 1234568,
+//     title: "Tarea de ejemplo 2",
+//     due_date: "2023-12-01",
+//     important: true,
+//     completed: true,
+//     user_id: 1111,
+//   },
+//   {
+//     id: 1234569,
+//     title: "Tarea de ejemplo 3",
+//     due_date: "2023-12-02",
+//     important: false,
+//     completed: false,
+//     user_id: 1111,
+//   },
+// ];
 
 function Authenticated() {
   const {logout} = useAuth();
   const [status, setStatus] = React.useState("idle");
   const [formStatus, setFormStatus] = React.useState("idle");
-  const [tasks, setTasks] = React.useState(exampleTasks);
+  const [tasks, setTasks] = React.useState([]);
+
+  React.useEffect(() => {
+    setStatus("loading");
+
+    getTasks()
+    .then(dataTasks => {
+      setTasks(dataTasks);
+      setStatus("success");
+    })
+    .catch(error => {
+      console.error("Failed to fetch tasks:", error);
+        setStatus("failed");
+
+        if (error.message.includes("No autorizado")) {
+          logout();
+        }
+    })
+
+  },[logout]);
 
   async function handleSubmit(event) {
     event.preventDefault();
