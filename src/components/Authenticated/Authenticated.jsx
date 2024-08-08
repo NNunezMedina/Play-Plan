@@ -3,7 +3,7 @@ import s from "./Authenticated.module.css";
 import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
-import { getTasks } from "../../services/tasks";
+import { createTask, getTasks } from "../../services/tasks";
 import "ldrs/tailspin";
 
 // const exampleTasks = [
@@ -62,7 +62,19 @@ function Authenticated() {
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData.entries());
 
+    setFormStatus("loading");
+
     // crear task
+    createTask(taskData)
+    .then((newTask) => {
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+      setFormStatus("success");
+      event.target.reset();
+    })
+    .catch((error) => {
+      console.error('Failed to create task:', error);
+      setFormStatus('failed')
+    })
   }
 
   async function handleEdit(id, updates) {
