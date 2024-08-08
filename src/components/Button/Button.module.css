@@ -79,6 +79,9 @@
 }
 
 .icon {
+  display: flex;
+  align-items: center;  /* Centra verticalmente */
+  justify-content: center;  
   width: var(--spacing-10, 40px);
   height: var(--spacing-10, 40px);
 }

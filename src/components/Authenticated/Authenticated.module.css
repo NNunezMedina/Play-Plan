@@ -83,6 +83,5 @@
 }
 
 .importantButton {
-  background-color: var(--violet-950);
-  color:white;
+  background-color: var(--neutral-400);
 }

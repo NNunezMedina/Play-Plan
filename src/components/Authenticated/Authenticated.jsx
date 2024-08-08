@@ -5,33 +5,8 @@ import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
 import { createTask, deleteTask, editTask, getTasks } from "../../services/tasks";
 import "ldrs/tailspin";
-
-// const exampleTasks = [
-//   {
-//     id: 1234567,
-//     title: "Tarea de ejemplo 1",
-//     due_date: null,
-//     important: false,
-//     completed: true,
-//     user_id: 1111,
-//   },
-//   {
-//     id: 1234568,
-//     title: "Tarea de ejemplo 2",
-//     due_date: "2023-12-01",
-//     important: true,
-//     completed: true,
-//     user_id: 1111,
-//   },
-//   {
-//     id: 1234569,
-//     title: "Tarea de ejemplo 3",
-//     due_date: "2023-12-02",
-//     important: false,
-//     completed: false,
-//     user_id: 1111,
-//   },
-// ];
+import Button from "../Button/Button";
+import styles from "../Button/Button.module.css";
 
 function Authenticated() {
   const { logout } = useAuth();
@@ -127,9 +102,9 @@ function Authenticated() {
           aria-label="due_date"
           disabled={isCreating}
         />
-        <button disabled={isCreating}>
+        <Button disabled={isCreating}>
           {isCreating ? "Adding..." : "Add task"}
-        </button>
+        </Button>
       </form>
 
       <div className={s["tasks-wrapper"]}>
@@ -164,13 +139,13 @@ function Authenticated() {
               <label htmlFor="important">Only important</label>
             </div>
           </div>
-          <button
+          <Button
             onClick={() => {
               logout();
             }}
           >
             Logout
-          </button>
+          </Button>
         </aside>
         <div className={s["tasks-list"]}>
           {isLoading && (
@@ -204,22 +179,23 @@ function Authenticated() {
                   </div>
                 </div>
                 <div className={s.actions}>
-                  <button
-                  className={task.important ? s.importantButton : ""}
+                  <Button
+                  className={`${styles.icon} ${task.important ? s.importantButton : ""}`}
                     onClick={() => {
                       const updates = { important: !task.important };
                       handleEdit(task.id, updates)
                     }}
                   > 
                     <BadgeAlert />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                  className={`${styles.icon}`}
                     onClick={() => {
                       handleDelete(task.id)
                     }}
                   >
                     <Trash2 />
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

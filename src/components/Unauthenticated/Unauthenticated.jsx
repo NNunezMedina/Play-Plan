@@ -1,6 +1,7 @@
 import * as React from "react";
 import s from "./Unauthenticated.module.css";
 import { useAuth } from "../../contexts/authContext";
+import Button from "../Button/Button";
 
 function Unauthenticated() {
   const { login, signup } = useAuth();
@@ -53,7 +54,7 @@ function Unauthenticated() {
   }
 
   const isLoading = status === "loading";
-  const buttonText = activeTab === "login" ? "Enter" : "Create";
+  const buttonText = activeTab === "login" ? "Login" : "Create";
   const hasError = status === "error";
 
   return (
@@ -97,9 +98,9 @@ function Unauthenticated() {
             minLength={6}
           />
         </div>
-        <button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : buttonText}
-        </button>
+        </Button>
       </form>
       {hasError && (
         <p className={s["error-message"]}>
