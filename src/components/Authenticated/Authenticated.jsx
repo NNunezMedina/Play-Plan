@@ -2,6 +2,7 @@ import * as React from "react";
 import s from "./Authenticated.module.css";
 import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
+import { useAuth } from "../../contexts/authContext";
 
 const exampleTasks = [
   {
@@ -31,7 +32,7 @@ const exampleTasks = [
 ];
 
 function Authenticated() {
-  const logout = () => {};
+  const {logout} = useAuth();
   const [status, setStatus] = React.useState("idle");
   const [formStatus, setFormStatus] = React.useState("idle");
   const [tasks, setTasks] = React.useState(exampleTasks);
@@ -106,7 +107,7 @@ function Authenticated() {
           </div>
           <button
             onClick={() => {
-              /* completar */
+              logout();
             }}
           >
             Logout

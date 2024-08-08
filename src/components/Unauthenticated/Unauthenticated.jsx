@@ -28,8 +28,7 @@ function Unauthenticated() {
 
     // obtener datos del formulario desde el estado
     const { email, password } = formData;
-    console.log(formData)
-
+    
     setStatus("loading");
 
     if (activeTab === "login") {
