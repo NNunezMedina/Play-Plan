@@ -3,7 +3,7 @@ import s from "./Authenticated.module.css";
 import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
-import { createTask, getTasks } from "../../services/tasks";
+import { createTask, deleteTask, editTask, getTasks } from "../../services/tasks";
 import "ldrs/tailspin";
 
 // const exampleTasks = [
@@ -64,7 +64,6 @@ function Authenticated() {
 
     setFormStatus("loading");
 
-    // crear task
     createTask(taskData)
     .then((newTask) => {
       setTasks((prevTasks) => [...prevTasks, newTask]);
@@ -79,10 +78,25 @@ function Authenticated() {
 
   async function handleEdit(id, updates) {
     // editar task
+    editTask(id, updates)
+    .then((updatedTask) => {
+      setTasks((prevTasks) => 
+        prevTasks.map((task) => (task.id === id ? updatedTask : task))
+      )
+    })
+    .catch((error) => {
+      console.error("Failed to edit task:", error)
+    })
   }
 
   async function handleDelete(id) {
-    // eliminar task
+    deleteTask(id)
+    .then(() => {
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
+    })
+    .catch((error) => {
+      console.error("Failed to delete task:", error)
+    })
   }
 
   const isLoading = status === "loading";
@@ -163,7 +177,8 @@ function Authenticated() {
                     id={task.id}
                     checked={task.completed}
                     onChange={() => {
-                      /* completar */
+                      const updates = { completed: !task.completed};
+                      handleEdit(task.id, updates)
                     }}
                   />
                   <div className={s["title-wrapper"]}>
@@ -177,15 +192,17 @@ function Authenticated() {
                 </div>
                 <div className={s.actions}>
                   <button
+                  className={task.important ? s.importantButton : ""}
                     onClick={() => {
-                      /* completar */
+                      const updates = { important: !task.important };
+                      handleEdit(task.id, updates)
                     }}
-                  >
+                  > 
                     <BadgeAlert />
                   </button>
                   <button
                     onClick={() => {
-                      /* completar */
+                      handleDelete(task.id)
                     }}
                   >
                     <Trash2 />

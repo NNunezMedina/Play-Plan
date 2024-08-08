@@ -81,3 +81,8 @@
   align-items: center;
   gap: var(--spacing-2);
 }
+
+.importantButton {
+  background-color: var(--violet-950);
+  color:white;
+}
