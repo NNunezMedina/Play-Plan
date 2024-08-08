@@ -4,6 +4,7 @@ import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
 import { getTasks } from "../../services/tasks";
+import "ldrs/tailspin";
 
 // const exampleTasks = [
 //   {
@@ -33,7 +34,7 @@ import { getTasks } from "../../services/tasks";
 // ];
 
 function Authenticated() {
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   const [status, setStatus] = React.useState("idle");
   const [formStatus, setFormStatus] = React.useState("idle");
   const [tasks, setTasks] = React.useState([]);
@@ -42,20 +43,19 @@ function Authenticated() {
     setStatus("loading");
 
     getTasks()
-    .then(dataTasks => {
-      setTasks(dataTasks);
-      setStatus("success");
-    })
-    .catch(error => {
-      console.error("Failed to fetch tasks:", error);
+      .then((dataTasks) => {
+        setTasks(dataTasks);
+        setStatus("success");
+      })
+      .catch((error) => {
+        console.error("Failed to fetch tasks:", error);
         setStatus("failed");
 
         if (error.message.includes("No autorizado")) {
           logout();
         }
-    })
-
-  },[logout]);
+      });
+  }, [logout]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -134,7 +134,14 @@ function Authenticated() {
           </button>
         </aside>
         <div className={s["tasks-list"]}>
-          {isLoading && <p>Loading...</p>}
+          {isLoading && (
+              <l-tailspin
+                size="40"
+                stroke="5"
+                speed="0.9"
+                color="black"
+              ></l-tailspin>
+          )}
           {tasks.length > 0 &&
             sortedTasks.map((task) => (
               <div key={task.id} className={s["task-wrapper"]}>
