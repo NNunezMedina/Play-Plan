@@ -4,6 +4,7 @@ import s from "./App.module.css";
 import Home from "../Home";
 import ColorGame from "../ColorGame";
 import Doable from "../Doable";
+import { AuthProvider } from "../../contexts/authContext";
 
 import reactIconUrl from "../../assets/react-icon.svg";
 
@@ -27,7 +28,7 @@ function App() {
         <button
           className={s.logo}
           onClick={() => {
-            setPage("/")
+            setPage("/");
           }}
         >
           <img src={reactIconUrl} /> React Evaluation
@@ -38,7 +39,7 @@ function App() {
               key={item.to}
               className={clsx(s["nav-item"], page === item.to && s.current)}
               onClick={() => {
-                setPage(item.to)
+                setPage(item.to);
               }}
             >
               {item.name}
@@ -49,7 +50,11 @@ function App() {
       <main className={s.main}>
         {page === "/" && <Home setPage={setPage} />}
         {page === "/color-game" && <ColorGame />}
-        {page === "/doable" && <Doable />}
+        {page === "/doable" && (
+          <AuthProvider>
+            <Doable />
+          </AuthProvider>
+        )}
       </main>
     </div>
   );
