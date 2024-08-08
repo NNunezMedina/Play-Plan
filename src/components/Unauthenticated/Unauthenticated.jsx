@@ -1,20 +1,34 @@
 import * as React from "react";
 import s from "./Unauthenticated.module.css";
+import { useAuth } from "../../contexts/authContext";
 
 function Unauthenticated() {
-  const login = () => {};
-  const signup = () => {};
+  const { login, signup } = useAuth();
 
   const [status, setStatus] = React.useState("idle");
   const [activeTab, setActiveTab] = React.useState("login");
   const [signUpErrors, setSignUpErrors] = React.useState(null);
 
+  //estado para manejar los datos del formulario
+  const [formData, setFormData] = React.useState({
+    email:"",
+    password:"",
+  })
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name] : value,
+    }));
+  };
+
   function handleSubmit(event) {
     event.preventDefault();
 
-    // obtener datos del formulario
-    const email = "";
-    const password = "";
+    // obtener datos del formulario desde el estado
+    const { email, password } = formData;
+    console.log(formData)
 
     setStatus("loading");
 
@@ -35,6 +49,8 @@ function Unauthenticated() {
   function handleTabChange(tab) {
     setActiveTab(tab);
     setStatus("idle");
+    setFormData({ email: "", password: "" });
+    setSignUpErrors(null);
   }
 
   const isLoading = status === "loading";
@@ -64,6 +80,8 @@ function Unauthenticated() {
             id="email"
             type="email"
             name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="user@example.com"
             required
           />
@@ -74,6 +92,8 @@ function Unauthenticated() {
             type="password"
             id="password"
             name="password"
+            value={formData.password}
+            onChange={handleChange}
             required
             minLength={6}
           />
