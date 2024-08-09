@@ -10,11 +10,12 @@ function Unauthenticated() {
   const [activeTab, setActiveTab] = React.useState("login");
   const [signUpErrors, setSignUpErrors] = React.useState(null);
 
-  //estado para manejar los datos del formulario
   const [formData, setFormData] = React.useState({
     email:"",
     password:"",
   })
+
+  const [ showPassword, setShowPassword ] = React.useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -53,6 +54,10 @@ function Unauthenticated() {
     setSignUpErrors(null);
   }
 
+  const togglePasswordButton = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword)
+  };
+
   const isLoading = status === "loading";
   const buttonText = activeTab === "login" ? "Login" : "Create";
   const hasError = status === "error";
@@ -88,15 +93,25 @@ function Unauthenticated() {
         </div>
         <div>
           <label htmlFor="password">Password</label>
+          <div className={s.passwordWrapper}>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
             minLength={6}
+            className={s.passwordInput}
           />
+          <button
+          type="button"
+          onClick={togglePasswordButton}
+          className={s.showPasswordButton}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+          </div>
         </div>
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : buttonText}

@@ -43,3 +43,25 @@ button.active {
   color: var(--danger-border);
   text-align: center;
 }
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.showPasswordButton {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: var(--violet-800);
+  padding: 0; 
+}
