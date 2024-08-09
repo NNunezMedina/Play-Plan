@@ -1,9 +1,11 @@
 import s from "./Home.module.css";
 import reactIconUrl from "../../assets/react-icon-lg.svg";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import Button from "../Button/Button";
+import { Link } from "react-router-dom";
 
-function Home({setPage}) {
+
+function Home() {
 
   return (
     <div className={s.wrapper}>
@@ -11,29 +13,24 @@ function Home({setPage}) {
       <h1 className={s.title}>React Evaluation</h1>
       <p className={s.name}>Nathaly Nunez</p>
       <div className={s.buttons} >
+        <Link to="/color-game">
         <Button
         variant="secondary"
-          onClick={() => {
-            setPage("/color-game")
-          }}
         >
           Color Game
         </Button>
+        </Link>
+        <Link to="/doable">
         <Button
         variant="secondary"
-          onClick={() => {
-            setPage("/doable")
-          }}
         >
           Doable
         </Button>
+        </Link>
       </div>
     </div>
   );
 }
 
-Home.propTypes = {
-  setPage: PropTypes.func.isRequired,
-}
 
 export default Home;

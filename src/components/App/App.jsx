@@ -1,4 +1,3 @@
-import * as React from "react";
 import clsx from "clsx";
 import s from "./App.module.css";
 import Home from "../Home";
@@ -7,57 +6,65 @@ import Doable from "../Doable";
 import { AuthProvider } from "../../contexts/authContext";
 
 import reactIconUrl from "../../assets/react-icon.svg";
-
-const navigation = [
-  {
-    name: "Color Game",
-    to: "/color-game",
-  },
-  {
-    name: "Doable",
-    to: "/doable",
-  },
-];
+import { Route, Routes, Link, BrowserRouter } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function App() {
-  const [page, setPage] = React.useState("/");
+  const location = useLocation();
 
   return (
-    <div className={s.wrapper}>
-      <header className={s.header}>
-        <button
-          className={s.logo}
-          onClick={() => {
-            setPage("/");
-          }}
-        >
-          <img src={reactIconUrl} /> React Evaluation
-        </button>
-        <nav className={s.nav}>
-          {navigation.map((item) => (
-            <button
-              key={item.to}
-              className={clsx(s["nav-item"], page === item.to && s.current)}
-              onClick={() => {
-                setPage(item.to);
-              }}
+      <div className={s.wrapper}>
+        <header className={s.header}>
+          <Link to="/" className={s.logo}>
+            <img src={reactIconUrl} /> React Evaluation
+          </Link>
+          <nav className={s.nav}>
+            <Link
+              to="/color-game"
+              className={clsx(
+                s["nav-item"],
+                location.pathname === "/color-game" && s.current
+              )}
             >
-              {item.name}
-            </button>
-          ))}
-        </nav>
-      </header>
-      <main className={s.main}>
-        {page === "/" && <Home setPage={setPage} />}
-        {page === "/color-game" && <ColorGame />}
-        {page === "/doable" && (
-          <AuthProvider>
-            <Doable />
-          </AuthProvider>
-        )}
-      </main>
-    </div>
+              Color Game
+            </Link>
+            <Link
+              to="/doable"
+              className={clsx(
+                s["nav-item"],
+                location.pathname === "/doable" && s.current
+              )}
+            >
+              Doable
+            </Link>
+          </nav>
+        </header>
+        <main className={s.main}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/color-game" element={<ColorGame />} />
+            <Route
+              path="/doable"
+              element={
+                <AuthProvider>
+                  <Doable />
+                </AuthProvider>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
   );
 }
 
-export default App;
+function BrowserApp() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
+
+export default BrowserApp; 
+
+
