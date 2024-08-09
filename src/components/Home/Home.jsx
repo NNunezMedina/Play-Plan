@@ -4,7 +4,6 @@ import reactIconUrl from "../../assets/react-icon-lg.svg";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
-
 function Home() {
 
   return (
@@ -31,6 +30,5 @@ function Home() {
     </div>
   );
 }
-
 
 export default Home;
