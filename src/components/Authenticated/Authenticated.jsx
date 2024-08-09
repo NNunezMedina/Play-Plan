@@ -3,7 +3,8 @@ import s from "./Authenticated.module.css";
 import { BadgeAlert, Trash2 } from "lucide-react";
 import { filterTasks, sortTasks } from "./utils";
 import { useAuth } from "../../contexts/authContext";
-import { createTask, deleteTask, editTask, getTasks } from "../../services/tasks";
+import { editTask } from "../../services/editTask";
+import { getTasks, createTask, deleteTask } from "../../services/tasks";
 import "ldrs/tailspin";
 import Button from "../Button/Button";
 import styles from "../Button/Button.module.css";
@@ -14,7 +15,10 @@ function Authenticated() {
   const [formStatus, setFormStatus] = React.useState("idle");
   const [tasks, setTasks] = React.useState([]);
   const [sortBy, setSortBy] = React.useState("due_date-asc");
-  const [filters, setFilters] = React.useState({ onlyPending: false, onlyImportant: false})
+  const [filters, setFilters] = React.useState({
+    onlyPending: false,
+    onlyImportant: false,
+  });
 
   React.useEffect(() => {
     setStatus("loading");
@@ -42,46 +46,44 @@ function Authenticated() {
     setFormStatus("loading");
 
     createTask(taskData)
-    .then((newTask) => {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
-      setFormStatus("success");
-      event.target.reset();
-    })
-    .catch((error) => {
-      console.error('Failed to create task:', error);
-      setFormStatus('failed')
-    })
+      .then((newTask) => {
+        setTasks((prevTasks) => [...prevTasks, newTask]);
+        setFormStatus("success");
+        event.target.reset();
+      })
+      .catch((error) => {
+        console.error("Failed to create task:", error);
+        setFormStatus("failed");
+      });
   }
 
   async function handleEdit(id, updates) {
     editTask(id, updates)
-    .then((updatedTask) => {
-      setTasks((prevTasks) => 
-        prevTasks.map((task) => (task.id === id ? updatedTask : task))
-      )
-    })
-    .catch((error) => {
-      console.error("Failed to edit task:", error)
-    })
+      .then((updatedTask) => {
+        setTasks((prevTasks) =>
+          prevTasks.map((task) => (task.id === id ? updatedTask : task))
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to edit task:", error);
+      });
   }
 
   async function handleDelete(id) {
     deleteTask(id)
-    .then(() => {
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id))
-    })
-    .catch((error) => {
-      console.error("Failed to delete task:", error)
-    })
+      .then(() => {
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      })
+      .catch((error) => {
+        console.error("Failed to delete task:", error);
+      });
   }
 
   const isLoading = status === "loading";
   const isCreating = formStatus === "loading";
 
-
   const filteredTasks = filterTasks(tasks, filters);
   const sortedTasks = sortTasks(filteredTasks, sortBy);
-
 
   return (
     <>
@@ -111,7 +113,11 @@ function Authenticated() {
         <aside className={s.aside}>
           <div className={s["input-group"]}>
             <label htmlFor="sort_by">Sort by</label>
-            <select id="sort_by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <select
+              id="sort_by"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
               <option value="due_date-asc">Due Date (old first)</option>
               <option value="due_date-desc">Due Date (new first)</option>
               <option value="alphabetical-asc">Alphabetical (a-z)</option>
@@ -121,20 +127,24 @@ function Authenticated() {
           <div className={s["input-group"]}>
             <label>Filter</label>
             <div className={s.checkbox}>
-              <input 
-              type="checkbox" 
-              id="pending" 
-              checked = {filters.onlyPending}
-              onChange={(e) => setFilters({ ...filters, onlyPending: e.target.checked })}
+              <input
+                type="checkbox"
+                id="pending"
+                checked={filters.onlyPending}
+                onChange={(e) =>
+                  setFilters({ ...filters, onlyPending: e.target.checked })
+                }
               />
               <label htmlFor="pending">Only pending</label>
             </div>
             <div className={s.checkbox}>
-              <input 
-              type="checkbox" 
-              id="important" 
-              checked={filters.onlyImportant}
-              onChange={(e) => setFilters({ ...filters, onlyImportant: e.target.checked })}
+              <input
+                type="checkbox"
+                id="important"
+                checked={filters.onlyImportant}
+                onChange={(e) =>
+                  setFilters({ ...filters, onlyImportant: e.target.checked })
+                }
               />
               <label htmlFor="important">Only important</label>
             </div>
@@ -149,12 +159,12 @@ function Authenticated() {
         </aside>
         <div className={s["tasks-list"]}>
           {isLoading && (
-              <l-tailspin
-                size="40"
-                stroke="5"
-                speed="0.9"
-                color="black"
-              ></l-tailspin>
+            <l-tailspin
+              size="40"
+              stroke="5"
+              speed="0.9"
+              color="black"
+            ></l-tailspin>
           )}
           {tasks.length > 0 &&
             sortedTasks.map((task) => (
@@ -165,8 +175,8 @@ function Authenticated() {
                     id={task.id}
                     checked={task.completed}
                     onChange={() => {
-                      const updates = { completed: !task.completed};
-                      handleEdit(task.id, updates)
+                      const updates = { completed: !task.completed };
+                      handleEdit(task.id, updates);
                     }}
                   />
                   <div className={s["title-wrapper"]}>
@@ -180,18 +190,20 @@ function Authenticated() {
                 </div>
                 <div className={s.actions}>
                   <Button
-                  className={`${styles.icon} ${task.important ? s.importantButton : ""}`}
+                    className={`${styles.icon} ${
+                      task.important ? s.importantButton : ""
+                    }`}
                     onClick={() => {
                       const updates = { important: !task.important };
-                      handleEdit(task.id, updates)
+                      handleEdit(task.id, updates);
                     }}
-                  > 
+                  >
                     <BadgeAlert />
                   </Button>
                   <Button
-                  className={`${styles.icon}`}
+                    className={`${styles.icon}`}
                     onClick={() => {
-                      handleDelete(task.id)
+                      handleDelete(task.id);
                     }}
                   >
                     <Trash2 />
