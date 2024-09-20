@@ -42,6 +42,10 @@ function Authenticated() {
     event.preventDefault();
     const formData = new FormData(event.target);
     const taskData = Object.fromEntries(formData.entries());
+    if (taskData.title.trim() === "") {
+      alert("El título de la tarea no puede estar vacío o ser solo espacios.");
+      return;
+    }
 
     setFormStatus("loading");
 
