@@ -24,7 +24,12 @@ function ColorGame() {
   function handleChangeNumber(event) {
     const value = Number(event.target.value);
 
-    setNumOfColors(value);
+    if(value>=3 && value <= 9 && value % 3 ==0) {
+      setNumOfColors(value);
+    } else {
+      alert("El valor ingresado no es válido. Debe ser 3, 6, o 9.")
+    }
+
   }
 
   const status = getStatus(attempts, target, numOfColors);
