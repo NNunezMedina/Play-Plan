@@ -29,7 +29,6 @@ function ColorGame() {
     } else {
       alert("El valor ingresado no es válido. Debe ser 3, 6, o 9.")
     }
-
   }
 
   const status = getStatus(attempts, target, numOfColors);

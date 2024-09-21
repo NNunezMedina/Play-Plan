@@ -107,6 +107,7 @@ function Authenticated() {
           name="due_date"
           aria-label="due_date"
           disabled={isCreating}
+          required
         />
         <Button disabled={isCreating}>
           {isCreating ? "Adding..." : "Add task"}
